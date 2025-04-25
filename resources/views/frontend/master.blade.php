@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Online - Nursey</title>
+    <title>Plant - Mart</title>
     <link rel="shortcut icon" href="{{ asset('/frontend/images/logo/favourite_icon_1.png') }}">
 
     <!-- fraimwork - css include -->
@@ -36,6 +36,48 @@
 
     <!-- custom - css include -->
     <link rel="stylesheet" type="text/css" href="{{ asset('/frontend/css/style.css')}}">
+    <!-- Include modal CSS directly inside your Blade template -->
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -100,7 +142,7 @@
                                 </form>
                             </div>
                         </div> --}}
-                        <div class="col col-lg-3 col-md-3 col-sm-12">
+                        <div class="col col-lg-9 col-md-3 col-sm-12"> {{--col col-lg-3 col-md-3 col-sm-12--}}
                             <button type="button" class="cart_btn">
                                <ul class="header_icons_group ul_li_right">
                                     <li>
@@ -124,9 +166,9 @@
                                 <div class="main_menu_inner collapse navbar-collapse" id="main_menu_dropdown">
                                     <ul class="main_menu_list ul_li">
                                         <li><a class="nav-link" href="{{ route('master') }}">Home</a></li>
-                                        <li><a class="nav-link" href="#">About us</a></li>
+                                        <li><a href="javascript:void(0)" class="modal-link" data-target="about-us-modal">About Us</a></li>
                                         <li><a class="nav-link" href="#">Shop</a></li>
-                                        <li><a class="nav-link" href="#">Contact Us</a></li>
+                                        <li><a href="javascript:void(0)" class="modal-link" data-target="contact-us-modal">Contact Us</a></li>
                                     </ul>
                                 </div>
                             </nav>
@@ -233,8 +275,8 @@
                             <div class="footer_widget footer_useful_links">
                                 <h3 class="footer_widget_title text-uppercase">Quick Links</h3>
                                 <ul class="ul_li_block">
-                                    <li><a href="#!">About Us</a></li>
-                                    <li><a href="#!">Contact Us</a></li>
+                                    <li><a href="javascript:void(0)" class="modal-link" data-target="about-us-modal">About Us</a></li>
+                                    <li><a href="javascript:void(0)" class="modal-link" data-target="contact-us-modal">Contact Us</a></li>
                                     <li><a href="#!">Products</a></li>
                                     <li><a href="{{ route('customer.register') }}">Login</a></li>
                                     <li><a href="{{ route('customer.register') }}">Sign Up</a></li>
@@ -278,6 +320,26 @@
         ================================================== -->
 
     </div>
+
+    <!-- Simple Modal Popup for About Us -->
+    <div id="about-us-modal" class="modal">
+        <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>About Us</h3>
+        <p>We are a team dedicated to providing the best nursery services. Created by the students of CSE470 course, Group-10</p>
+        </div>
+    </div>
+    
+    <!-- Simple Modal Popup for Contact Us -->
+    <div id="contact-us-modal" class="modal">
+        <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Contact Us</h3>
+        <p>You can reach us at: <strong>+01123456789</strong></p>
+        </div>
+    </div>
+      
+
     <!-- body_wrap - end -->
 
     <!-- fraimwork - jquery include -->
@@ -297,6 +359,36 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- custom - main-js -->
     <script src="{{ asset('/frontend/js/main.js') }}"></script>
+    <script>
+        // Get all modal links
+        const modalLinks = document.querySelectorAll('.modal-link');
+        
+        modalLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-target');
+                const modal = document.getElementById(modalId);
+                modal.style.display = "block";  // Show the modal
+            });
+        });
+    
+        // Get all close buttons
+        const closeButtons = document.querySelectorAll('.close-btn');
+        
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                modal.style.display = "none";  // Close the modal
+            });
+        });
+    
+        // Close modal if clicked outside of the modal content
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";  // Close modal when clicking outside
+            }
+        });
+    </script>
+    
 
     @yield('footer_script')
 
